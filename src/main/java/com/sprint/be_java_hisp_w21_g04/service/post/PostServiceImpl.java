@@ -32,6 +32,7 @@ public class PostServiceImpl implements IPostService{
         User user = _userRepository.getById(post.getUserId());
         // Validar que exista el user que crea el post
         if (user == null) throw new UserNotFoundException("El usuario con id " + post.getUserId() + " no existe");
+
         Post postCreated = modelMapper.map(post, Post.class);
 
         if (this._postRepository.post(postCreated)) {
