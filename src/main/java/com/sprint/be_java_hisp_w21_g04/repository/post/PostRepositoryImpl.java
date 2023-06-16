@@ -50,8 +50,8 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public void post(Post post) {
-        this.posts.add(post);
+    public Boolean post(Post post) {
+        return this.posts.add(post);
     }
 
     @Override

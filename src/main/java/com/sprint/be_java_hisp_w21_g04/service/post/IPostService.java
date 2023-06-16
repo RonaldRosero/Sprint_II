@@ -7,7 +7,7 @@ import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostRespon
 import java.util.List;
 
 public interface IPostService {
-    void post(PostRequestDto post);
+    String post(PostRequestDto post);
     List<PostResponseDto> getAll();
 
     SellerFollowedListPostResponseDto sellerFollowedListPosts(int user_id, String order);

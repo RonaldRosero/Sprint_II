@@ -23,8 +23,7 @@ public class PostController {
 
     @PostMapping("/post")
     public ResponseEntity<String> post(@RequestBody(required = true) PostRequestDto post) {
-        this._service.post(post);
-        return new ResponseEntity<>("Post agregado exitosamente",HttpStatus.OK);
+        return new ResponseEntity<>(this._service.post(post),HttpStatus.OK);
     }
 
     @GetMapping("/followed/{userId}/list")
