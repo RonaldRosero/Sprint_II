@@ -50,6 +50,8 @@ public class PostServiceImpl implements IPostService{
 
 //    metodo sobrecargado para prueba
     public SellerFollowedListPostResponseDto sellerFollowedListPosts(int userId, String order) {
+ //     Validar que exista el usuario que consulta
+        _userRepository.getById(userId);
 //      Se define el tiempo de publicacion de posts de las ultimas dos semanas
 //      Se define una fecha limite/base de dos semanas hacia atras desde la fecha actual
         LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
