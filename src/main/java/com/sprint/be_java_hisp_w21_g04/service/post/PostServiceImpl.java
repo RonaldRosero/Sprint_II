@@ -2,11 +2,11 @@ package com.sprint.be_java_hisp_w21_g04.service.post;
 
 import com.sprint.be_java_hisp_w21_g04.dto.request.PostRequestDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.PostResponseDto;
+import com.sprint.be_java_hisp_w21_g04.dto.response.ResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostResponseDto;
 import com.sprint.be_java_hisp_w21_g04.entity.Post;
-import com.sprint.be_java_hisp_w21_g04.entity.User;
 import com.sprint.be_java_hisp_w21_g04.exception.EmptySellerFollowedList;
-import com.sprint.be_java_hisp_w21_g04.exception.UserNotFoundException;
+import com.sprint.be_java_hisp_w21_g04.exception.IllegalDataException;
 import com.sprint.be_java_hisp_w21_g04.repository.post.IPostRepository;
 import com.sprint.be_java_hisp_w21_g04.repository.user.IUserRepository;
 import org.modelmapper.ModelMapper;
@@ -28,17 +28,19 @@ public class PostServiceImpl implements IPostService{
         this.modelMapper = new ModelMapper();
     }
     @Override
-    public String post(PostRequestDto post) {
-        User user = _userRepository.getById(post.getUserId());
-        // Validar que exista el user que crea el post
-        if (user == null) throw new UserNotFoundException("El usuario con id " + post.getUserId() + " no existe");
+    public ResponseDto post(PostRequestDto post) {
+ //     Validar que exista el user que crea el post
+        _userRepository.getById(post.getUserId());
+//      Validar que el post se cree con un producto
+        if (post.getProduct() == null){
+            throw new IllegalDataException("Post sin producto");
+        }
+        Post newPost = modelMapper.map(post, Post.class);
 
-        Post postCreated = modelMapper.map(post, Post.class);
-
-        if (this._postRepository.post(postCreated)) {
-            return "Post agregado exitosamente";
+        if (this._postRepository.post(newPost)) {
+            return new ResponseDto("Post agregado exitosamente");
         } else {
-            return "Error al agregar el post";
+            return new ResponseDto("Error al agregar el post");
         }
     }
 
