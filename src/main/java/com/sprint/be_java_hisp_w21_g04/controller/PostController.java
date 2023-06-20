@@ -2,6 +2,7 @@ package com.sprint.be_java_hisp_w21_g04.controller;
 
 import com.sprint.be_java_hisp_w21_g04.dto.request.PostRequestDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.PostResponseDto;
+import com.sprint.be_java_hisp_w21_g04.dto.response.ResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostResponseDto;
 import com.sprint.be_java_hisp_w21_g04.entity.Post;
 import com.sprint.be_java_hisp_w21_g04.service.post.IPostService;
@@ -22,7 +23,7 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<String> post(@RequestBody(required = true) PostRequestDto post) {
+    public ResponseEntity<ResponseDto> post(@RequestBody(required = true) PostRequestDto post) {
         return new ResponseEntity<>(this._service.post(post),HttpStatus.OK);
     }
 
