@@ -5,8 +5,9 @@ import com.sprint.be_java_hisp_w21_g04.dto.response.PostResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.ResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostResponseDto;
 import com.sprint.be_java_hisp_w21_g04.entity.Post;
+import com.sprint.be_java_hisp_w21_g04.entity.User;
 import com.sprint.be_java_hisp_w21_g04.exception.EmptySellerFollowedList;
-import com.sprint.be_java_hisp_w21_g04.exception.IllegalDataException;
+import com.sprint.be_java_hisp_w21_g04.exception.UserNotFoundException;
 import com.sprint.be_java_hisp_w21_g04.repository.post.IPostRepository;
 import com.sprint.be_java_hisp_w21_g04.repository.user.IUserRepository;
 import org.modelmapper.ModelMapper;
@@ -30,11 +31,11 @@ public class PostServiceImpl implements IPostService{
     @Override
     public ResponseDto post(PostRequestDto post) {
  //     Validar que exista el user que crea el post
-        _userRepository.getById(post.getUserId());
-//      Validar que el post se cree con un producto
-        if (post.getProduct() == null){
-            throw new IllegalDataException("Post sin producto");
+        User user = _userRepository.findUserById(post.getUserId());
+        if (user == null ) {
+            throw new UserNotFoundException("Usuario no encontrado.");
         }
+
         Post newPost = modelMapper.map(post, Post.class);
 
         if (this._postRepository.post(newPost)) {
