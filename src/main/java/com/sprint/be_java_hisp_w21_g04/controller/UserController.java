@@ -5,6 +5,8 @@ import com.sprint.be_java_hisp_w21_g04.service.user.UserServiceImpl;
 import com.sprint.be_java_hisp_w21_g04.dto.response.FollowedResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.FollowersResponseDto;
 import com.sprint.be_java_hisp_w21_g04.service.user.IUserService;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     private UserServiceImpl _userService;
 
+    @Min(value = 1, message = "El id debe ser mayor a cero")
+
     public UserController(UserServiceImpl userService) {
         this._userService = userService;
     }
     @PostMapping("/users/{userId}/follow/{userIdToFollow}")
-    public ResponseEntity<ResponseDto> userFollow(@PathVariable int userId, @PathVariable int userIdToFollow){
+    public ResponseEntity<ResponseDto> userFollow(
+            @PathVariable @NotNull(message = "El id no puede estar vacío") @Min(value = 1, message = "El id debe ser mayor a cero") Integer userId,
+            @PathVariable @NotNull(message = "El id no puede estar vacío") @Min(value = 1, message = "El id debe ser mayor a cero") Integer userIdToFollow){
         return ResponseEntity.ok(_userService.followUser(userId, userIdToFollow));
     }
     @GetMapping("/users/{userId}/followers/count")
@@ -30,7 +36,9 @@ public class UserController {
     }
 
     @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
-    public ResponseEntity<ResponseDto> userUnfollow(@PathVariable int userId, @PathVariable int userIdToUnfollow){
+    public ResponseEntity<ResponseDto> userUnfollow(
+            @PathVariable @NotNull(message = "El id no puede estar vacío") @Min(value = 1, message = "El id debe ser mayor a cero") Integer userId,
+            @PathVariable @NotNull(message = "El id no puede estar vacío") @Min(value = 1, message = "El id debe ser mayor a cero") Integer userIdToUnfollow){
         return ResponseEntity.ok(_userService.unfollowUser(userId, userIdToUnfollow));
     }
 

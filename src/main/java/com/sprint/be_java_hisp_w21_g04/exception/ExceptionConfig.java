@@ -1,16 +1,23 @@
 package com.sprint.be_java_hisp_w21_g04.exception;
 
+import com.sprint.be_java_hisp_w21_g04.dto.ErrorValidationsDTO;
 import com.sprint.be_java_hisp_w21_g04.dto.response.ErrorDto;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 import com.sprint.be_java_hisp_w21_g04.dto.response.UserNotFoundDto;
+import org.springframework.web.bind.annotation.RestController;
 
-@ControllerAdvice
+import java.util.stream.Collectors;
+
+
+@ControllerAdvice(annotations = RestController.class)
 public class ExceptionConfig {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -71,6 +78,16 @@ public class ExceptionConfig {
         ErrorDto error = new ErrorDto(e.getMessage(), 400);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorValidationsDTO> validationException(MethodArgumentNotValidException e){
+        return ResponseEntity.badRequest().body(
+                new ErrorValidationsDTO("Se encontraron los siguientes errores en las validaciones: ",
+                        e.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList())
+                )
+        );
+    }
+
 
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<?> generalException(Exception e){

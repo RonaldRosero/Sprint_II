@@ -4,17 +4,18 @@ import com.sprint.be_java_hisp_w21_g04.dto.request.PostRequestDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.PostResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.ResponseDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostResponseDto;
-import com.sprint.be_java_hisp_w21_g04.entity.Post;
 import com.sprint.be_java_hisp_w21_g04.service.post.IPostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@Validated
 public class PostController {
     private IPostService _service;
 
@@ -23,7 +24,7 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<ResponseDto> post(@RequestBody(required = true) PostRequestDto post) {
+    public ResponseEntity<ResponseDto> post(@RequestBody @Valid PostRequestDto post) {
         return new ResponseEntity<>(this._service.post(post),HttpStatus.OK);
     }
 
