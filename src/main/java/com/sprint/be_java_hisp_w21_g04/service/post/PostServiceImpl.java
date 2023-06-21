@@ -54,11 +54,13 @@ public class PostServiceImpl implements IPostService{
 //    metodo sobrecargado para prueba
     public SellerFollowedListPostResponseDto sellerFollowedListPosts(int userId, String order) {
  //     Validar que exista el usuario que consulta
-        _userRepository.getById(userId);
+        User user = _userRepository.findUserById(userId);
+        if (user == null ) {
+            throw new UserNotFoundException("Usuario no encontrado.");
+        }
 //      Se define el tiempo de publicacion de posts de las ultimas dos semanas
 //      Se define una fecha limite/base de dos semanas hacia atras desde la fecha actual
         LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
-        System.out.println("HOLA" + twoWeeksAgo);
         if(this._postRepository.getSellerFollowed(userId).isEmpty()) throw new EmptySellerFollowedList("Los vendedores que sigues no tienen publicaciones");
         List<PostResponseDto> posts = this._postRepository.getSellerFollowed(userId).stream()
                 .filter(post -> {
