@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -23,4 +24,17 @@ public class PostResponseDto {
     private Product product;
     private int category;
     private double price;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PostResponseDto that = (PostResponseDto) o;
+        return userId == that.userId && category == that.category && Double.compare(that.price, price) == 0 && Objects.equals(date, that.date) && Objects.equals(product, that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, date, product, category, price);
+    }
 }

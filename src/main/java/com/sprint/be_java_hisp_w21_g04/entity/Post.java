@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -23,4 +24,16 @@ public class Post {
     private boolean hasPromo;
     private double discount;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return userId == post.userId && category == post.category && Double.compare(post.price, price) == 0 && hasPromo == post.hasPromo && Double.compare(post.discount, discount) == 0 && Objects.equals(date, post.date) && Objects.equals(product, post.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, date, product, category, price, hasPromo, discount);
+    }
 }
