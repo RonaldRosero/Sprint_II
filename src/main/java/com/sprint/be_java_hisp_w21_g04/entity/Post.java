@@ -36,4 +36,17 @@ public class Post {
     public int hashCode() {
         return Objects.hash(userId, date, product, category, price, hasPromo, discount);
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "userId=" + userId +
+                ", date=" + date +
+                ", product=" + product +
+                ", category=" + category +
+                ", price=" + price +
+                ", hasPromo=" + hasPromo +
+                ", discount=" + discount +
+                '}';
+    }
 }
