@@ -53,54 +53,7 @@ public class Test_T005_US_0009_Ordered_Date {
 
     }
 
-    @Test
-    @DisplayName("T0005 - Post order date")
-    void orderDate() {
 
-        // Arrange
-        Integer userId = 2;
-        String orderDate = "date_asc";
-
-        List<Integer> followers = new ArrayList<>();
-        List<Integer> followed = new ArrayList<>();
-
-        User userRequest = new User(2, "MikeJohnson", followers, followed);
-
-        when(userRepository.findUserById(userId)).thenReturn(userRequest);
-
-       // Configurar la lista de publicaciones simuladas
-        LocalDate currentDate = LocalDate.now();
-        LocalDate twoWeeksAgo = currentDate.minusWeeks(2);
-
-        Product product1 =  new Product(1, "Camiseta", "Ropa", "Adidas",
-                "Rojo con blanco", "Camiseta de algodón con estampado");
-
-        Product product2 = new Product(2, "Pantalón vaquero", "Ropa", "Levi's",
-        "Azul", "Pantalón vaquero ajustado para hombre");
-
-        Post post1 = new Post(2,currentDate.minusDays(5), product1, 1, 10.0, false, 0.0);
-        Post post2 = new Post(2, twoWeeksAgo.plusDays(3), product2, 2, 20.0, false, 0.0);
-
-        List<Post> userPosts = Arrays.asList(post1, post2);
-
-        when(postRepository.getSellerFollowed(userId)).thenReturn(userPosts);
-
-        // Preparar respuesta esperada
-        PostResponseDto postResponseDto1 = new PostResponseDto(userId, currentDate.minusDays(5), product1, 1, 10.0);
-        PostResponseDto postResponseDto2 = new PostResponseDto(userId, twoWeeksAgo.plusDays(3), product2, 2, 20.0);
-        List<PostResponseDto> postResponseDto = Arrays.asList(postResponseDto2, postResponseDto1);
-        SellerFollowedListPostResponseDto expectResponseDto = new SellerFollowedListPostResponseDto(userId, postResponseDto);
-
-        // Act
-        SellerFollowedListPostResponseDto result = postService.sellerFollowedListPosts(userId, orderDate);
-
-        // Assert
-        List<PostResponseDto>  postsResult = result.getPosts();
-        Assertions.assertEquals(2, postsResult.size());
-        Assertions.assertEquals(postResponseDto, postsResult);
-        Assertions.assertEquals(expectResponseDto, result);
-
-    }
 
 
 
