@@ -7,6 +7,7 @@ import com.sprint.be_java_hisp_w21_g04.dto.response.SellerFollowedListPostRespon
 import com.sprint.be_java_hisp_w21_g04.entity.Post;
 import com.sprint.be_java_hisp_w21_g04.entity.User;
 import com.sprint.be_java_hisp_w21_g04.exception.EmptySellerFollowedList;
+import com.sprint.be_java_hisp_w21_g04.exception.IllegalDataException;
 import com.sprint.be_java_hisp_w21_g04.exception.UserNotFoundException;
 import com.sprint.be_java_hisp_w21_g04.repository.post.IPostRepository;
 import com.sprint.be_java_hisp_w21_g04.repository.user.IUserRepository;
@@ -53,11 +54,12 @@ public class PostServiceImpl implements IPostService{
 
 //    metodo sobrecargado para prueba
     public SellerFollowedListPostResponseDto sellerFollowedListPosts(int userId, String order) {
- //     Validar que exista el usuario que consulta
+//      Validar que exista el usuario que consulta
         User user = _userRepository.findUserById(userId);
         if (user == null ) {
             throw new UserNotFoundException("Usuario no encontrado.");
         }
+
 //      Se define el tiempo de publicacion de posts de las ultimas dos semanas
 //      Se define una fecha limite/base de dos semanas hacia atras desde la fecha actual
         LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
@@ -81,12 +83,11 @@ public class PostServiceImpl implements IPostService{
                     } else if ("date_desc".equals(order)) {
                         return date2.compareTo(date1);
                     } else {
-                        return 0;
+                        throw new IllegalDataException("Ordenamiento invalido");
                     }
                 })
 //               Se convierte la lista a un ArrayList
                 .collect(Collectors.toList());
-//        System.out.println("HOLA" + posts.size());
         if(posts.isEmpty()) throw new EmptySellerFollowedList("Los vendedores que sigues no han hecho publiciones en las últimas dos semanas");
         return new SellerFollowedListPostResponseDto(userId, posts);
 

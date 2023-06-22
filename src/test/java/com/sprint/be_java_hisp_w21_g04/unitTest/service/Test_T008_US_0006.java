@@ -42,7 +42,7 @@ public class Test_T008_US_0006 {
     PostServiceImpl postService;
 
     @Test
-    @DisplayName("T0008 - Post order date date_desc")
+    @DisplayName("T0008 - Posts from the last two weeks")
     void orderDate() {
 
         // Arrange
