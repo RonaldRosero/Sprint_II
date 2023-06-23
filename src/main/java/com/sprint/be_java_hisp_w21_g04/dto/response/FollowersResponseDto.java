@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FollowersResponseDto {
