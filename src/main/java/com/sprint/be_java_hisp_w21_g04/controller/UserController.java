@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
     private UserServiceImpl _userService;
 
-    @Min(value = 1, message = "El id debe ser mayor a cero")
-
     public UserController(UserServiceImpl userService) {
         this._userService = userService;
     }
