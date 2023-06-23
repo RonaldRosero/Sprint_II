@@ -1,14 +1,16 @@
-package com.sprint.be_java_hisp_w21_g04.integrationTest;
+package com.sprint.be_java_hisp_w21_g04.integrationTest.PostController;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sprint.be_java_hisp_w21_g04.dto.request.PostRequestDto;
+import com.sprint.be_java_hisp_w21_g04.dto.request.ProductDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.ErrorDto;
 import com.sprint.be_java_hisp_w21_g04.dto.response.ResponseDto;
-import com.sprint.be_java_hisp_w21_g04.entity.User;
-import com.sprint.be_java_hisp_w21_g04.exception.UserAlreadyFollowedException;
+import com.sprint.be_java_hisp_w21_g04.dto.response.UserNotFoundDto;
+import com.sprint.be_java_hisp_w21_g04.entity.Post;
+import com.sprint.be_java_hisp_w21_g04.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,8 +23,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,8 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerIntegrationTest {
+public class PostIntegrationTest {
 
+    private String url = "/products/post";
     @Autowired
     MockMvc mockMvc;
 
@@ -41,66 +43,68 @@ public class UserControllerIntegrationTest {
 
 
     @Test
-    void followTestIntegration() throws Exception {
+    void postTestIntegrationOk() throws Exception {
         // Arrange
+        LocalDate currentDate = LocalDate.now();
+        ProductDto productDto =  new ProductDto(1, "Camiseta", "Ropa", "Adidas",
+                "Rojo con blanco", "Camiseta de algodón con estampado");
 
-        List<Integer> followers = new ArrayList<>();
-        List<Integer> followed = new ArrayList<>();
+        PostRequestDto postRequest = new PostRequestDto(2, currentDate.minusDays(5), productDto, 1, 10.0);
 
-        User userfollower = new User(1, "JohnDoe", followers, followed);
-        User userFollow = new User(2, "JaneSmith", followers, followed);
+        ResponseDto expectResponseDto = new ResponseDto("Post agregado exitosamente");
 
-        //ResponseDto expectResponseDto = new ResponseDto("Has seguido a " + userFollow.getUserName());
-        UserAlreadyFollowedException expectResponseDto = new UserAlreadyFollowedException("Ya se están siguiendo.");
-
-
-        //String payloadJson = writer.writeValueAsString(houseRequest);
+        String payloadJson = writer.writeValueAsString(postRequest);
         String reponseJson = writer.writeValueAsString(expectResponseDto);
-
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users/{userId}/follow/{userIdToFollow}", 1, 2);
 
         // Expects
         ResultMatcher contentExpected = MockMvcResultMatchers.content().json(reponseJson);
         ResultMatcher statusExpected = MockMvcResultMatchers.status().isOk();
         ResultMatcher contentTypeExpected = MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON);
 
-
-
-        MvcResult mvcResult = mockMvc.perform(request)
+        MvcResult mvcResult = mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payloadJson))
                 .andDo(print())
                 .andExpect(contentExpected)
                 .andExpect(statusExpected)
-                .andExpect(contentExpected) // verifica que coincida content type
                 .andExpect(contentTypeExpected)
                 .andReturn();
 
         assertEquals(reponseJson, mvcResult.getResponse().getContentAsString());
-
     }
 
 
+
+
     @Test
-    void userAlreadyFollowedTestIntegration() throws Exception {
+    void postUserNotFoundTestIntegration() throws Exception {
         // Arrange
 
-        ErrorDto errorDto = new ErrorDto("Ya se estÃ¡n siguiendo.", 400);
+        LocalDate currentDate = LocalDate.now();
+        ProductDto productDto =  new ProductDto(1, "Camiseta", "Ropa", "Adidas",
+                "Rojo con blanco", "Camiseta de algodón con estampado");
 
-        String errorExpected = writer.writeValueAsString(errorDto);
+        PostRequestDto postRequest = new PostRequestDto(110, currentDate.minusDays(5), productDto, 1, 10.0);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/users/{userId}/follow/{userIdToFollow}", 1, 2);
+        UserNotFoundDto userNotFoundDto = new UserNotFoundDto("Usuario no encontrado.", 404);
+
+        String payloadJson = writer.writeValueAsString(postRequest);
+        String errorExpected = writer.writeValueAsString(userNotFoundDto);
+
 
         // Expects
-        ResultMatcher statusExpected = MockMvcResultMatchers.status().isBadRequest();
+        ResultMatcher statusExpected = MockMvcResultMatchers.status().isNotFound();
         ResultMatcher contentTypeExpected = MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON);
 
-        MvcResult mvcResult = mockMvc.perform(request)
+        MvcResult mvcResult = mockMvc.perform(post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payloadJson))
                 .andDo(print())
                 .andExpect(statusExpected)
                 .andExpect(contentTypeExpected)
                 .andReturn();
 
-        System.out.println(errorExpected);
         assertEquals(errorExpected,mvcResult.getResponse().getContentAsString());
-
     }
+
 }

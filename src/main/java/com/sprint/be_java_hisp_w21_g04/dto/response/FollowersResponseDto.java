@@ -12,7 +12,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FollowersResponseDto {
 
@@ -28,8 +27,4 @@ public class FollowersResponseDto {
         return userId == that.userId && Objects.equals(userName, that.userName) && Objects.equals(followers, that.followers);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName, followers);
-    }
 }

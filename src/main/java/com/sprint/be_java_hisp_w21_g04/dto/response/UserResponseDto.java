@@ -25,8 +25,4 @@ public class UserResponseDto {
         return userId == that.userId && Objects.equals(userName, that.userName);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName);
-    }
 }
