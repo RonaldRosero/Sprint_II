@@ -10,7 +10,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UserResponseDto {
     
