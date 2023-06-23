@@ -6,7 +6,7 @@ import com.sprint.be_java_hisp_w21_g04.entity.User;
 import java.util.List;
 
 public interface IPostRepository {
-    void post(Post post);
+    Boolean post(Post post);
     List<Post> getAll();
     public List<Post> getSellerFollowed(int user_id);
 }

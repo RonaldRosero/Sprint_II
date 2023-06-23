@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,4 +18,17 @@ import java.util.List;
 public class SellerFollowedListPostResponseDto {
     private int userId;
     private List<PostResponseDto> posts;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SellerFollowedListPostResponseDto that = (SellerFollowedListPostResponseDto) o;
+        return userId == that.userId && Objects.equals(posts, that.posts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, posts);
+    }
 }

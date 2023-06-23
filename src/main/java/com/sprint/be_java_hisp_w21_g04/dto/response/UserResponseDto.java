@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,5 +16,13 @@ public class UserResponseDto {
     
     private int userId;
     private String userName;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserResponseDto that = (UserResponseDto) o;
+        return userId == that.userId && Objects.equals(userName, that.userName);
+    }
 
 }
